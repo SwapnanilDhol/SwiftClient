@@ -196,10 +196,10 @@ public class TelemetryManager {
     }
 
     public static func send(_ signalType: TelemetrySignalType, for clientUser: String? = nil, floatValue: Double? = nil, with additionalPayload: [String: String] = [:]) {
-        TelemetryManager.shared.send(signalType, for: clientUser, floatValue: floatValue, with: additionalPayload)
+        TelemetryManager.shared?.send(signalType, for: clientUser, floatValue: floatValue, with: additionalPayload)
     }
 
-    public static var shared: TelemetryManager {
+    public static var shared: TelemetryManager? {
         if let telemetryManager = initializedTelemetryManager {
            return telemetryManager
         } else if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
@@ -207,9 +207,9 @@ public class TelemetryManager {
             self.initializedTelemetryManager = .init(configuration: .init(appID: ""))
             return self.initializedTelemetryManager!
         } else {
-            fatalError("Please call TelemetryManager.initialize(...) before accessing the shared telemetryManager instance.")
+            assertionFailure("Please call TelemetryManager.initialize(...) before accessing the shared telemetryManager instance.")
+            return nil
         }
-
     }
 
     /// Change the default user identifier sent with each signal.
@@ -222,7 +222,7 @@ public class TelemetryManager {
     /// Note that just as with specifying the user identifier with the `send` call, the identifier will never leave the device.
     /// Instead it is used to create a hash, which is included in your signal to allow you to count distinct users.
     public static func updateDefaultUser(to newDefaultUser: String?) {
-        TelemetryManager.shared.updateDefaultUser(to: newDefaultUser)
+        TelemetryManager.shared?.updateDefaultUser(to: newDefaultUser)
     }
 
     public func updateDefaultUser(to newDefaultUser: String?) {
@@ -231,7 +231,7 @@ public class TelemetryManager {
 
     /// Generate a new Session ID for all new Signals, in order to begin a new session instead of continuing the old one.
     public static func generateNewSession() {
-        TelemetryManager.shared.generateNewSession()
+        TelemetryManager.shared?.generateNewSession()
     }
 
     public func generateNewSession() {
